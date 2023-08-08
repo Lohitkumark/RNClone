@@ -27,10 +27,10 @@ export const MenuComponent = ({ visible, style, menuAnchor, closeMenu, children 
 const styles = StyleSheet.create({
     menuContent: {
         backgroundColor: 'white',
-        borderRadius: 1
+        borderRadius: 5
     },
     menuContentDark: {
         backgroundColor: '#212C32',
-        borderRadius: 1
+        borderRadius: 5
     }
 });

@@ -24,6 +24,7 @@ export const Chats = ({ navigation }) => {
             phNumber: item?.[0]?.number
         })
     }
+
     return (
         <View style={[styles.container, {backgroundColor: isDarkMode ? '#101B20' : 'white'}]}>
             <VirtualizedList
@@ -42,6 +43,7 @@ export const Chats = ({ navigation }) => {
                                 <Icon name='checkmark-done-sharp' style={{ paddingRight: 2 }} color='rgb(82,189,234)' size={20}></Icon>
                                 <Text style={[styles.messageText, {color: isDarkMode ? 'white' : 'black'}]}>{(item[item.length - 1]?.message)}</Text>
                             </View>
+                            <Text style={styles.chatTime}>{(item[item.length - 1]?.time)}</Text>
                         </View>
                     </Pressable>
                 }
@@ -79,6 +81,12 @@ const styles = StyleSheet.create({
         left: 60,
         fontWeight: 'bold',
         color: 'black'
+    },
+    chatTime:{
+        position:'relative',
+        alignSelf:"flex-end",
+        top:20,
+        right:10
     },
     messageText: {
         position: 'relative',

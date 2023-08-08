@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { StyleSheet, Text, View, PermissionsAndroid, Platform, Linking, Alert, Image, Dimensions, Pressable, TouchableOpacity, Button } from 'react-native';
+import { StyleSheet, Text, View, PermissionsAndroid, Platform, Linking, Alert, Image, Dimensions, Pressable, TouchableOpacity, Button, StatusBar } from 'react-native';
 import { request, PERMISSIONS, RESULTS } from 'react-native-permissions';
 import Video from 'react-native-video';
 import { useCamera } from 'react-native-camera-hooks'
@@ -97,6 +97,7 @@ export const CameraScreen = ({ toggleCamera }) => {
     return (
         <View style={styles.container
         }>
+            <StatusBar barStyle='black' backgroundColor='black'/>
             {(photoPath === null && videoPath === null) ? <View style={{ flex: 1 }}>
                 {/* <CameraModule
                     cameraRef={cameraRef}

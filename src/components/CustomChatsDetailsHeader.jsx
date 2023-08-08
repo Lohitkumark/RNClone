@@ -1,4 +1,4 @@
-const { View, StyleSheet, Pressable, Text, Image, TextInput, useColorScheme } = require("react-native");
+const { View, StyleSheet, Pressable, Text, Image, TextInput, useColorScheme, StatusBar } = require("react-native");
 import Icon from 'react-native-vector-icons/Ionicons'
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 import { useRoute } from '@react-navigation/native';
@@ -6,7 +6,7 @@ import { useRoute } from '@react-navigation/native';
 export const CustomChatsDetailsHeader = ({ navigation }) => {
     const route = useRoute()
     const isDarkMode = useColorScheme() === 'dark';
-    
+
     return (
         <View style={{ height: 50, backgroundColor: isDarkMode ? '#212C32' : '#018068' }}>
             <Pressable onPress={() => navigation.navigate('WhatsApp')}>

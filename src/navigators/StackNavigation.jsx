@@ -1,7 +1,7 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Icon from 'react-native-vector-icons/Ionicons'
 import { TabNavigation } from './TabNavigation';
-import { Dimensions, Modal, StyleSheet, View, useColorScheme } from 'react-native';
+import { Dimensions, Modal, StatusBar, StyleSheet, View, useColorScheme } from 'react-native';
 import { useState } from 'react';
 import ContactsScreen from '../screens/ContactsScreen';
 import { ChatsDetails } from '../screens/ChatsDetail';
@@ -10,6 +10,7 @@ import { MenuComponent } from '../uiComponents/MenuComponent';
 import { Menu, PaperProvider } from 'react-native-paper';
 import { SearchChats } from '../components/SearchChats';
 import { SearchBox } from '../uiComponents/SearchBox';
+import { CameraScreen } from '../components/Camera/CameraScreen';
 
 
 const Stack = createNativeStackNavigator();
@@ -44,17 +45,26 @@ export const StackNavigation = ({ toggleCamera }) => {
     }
 
     const searchContent = () => {
-        if(activeTab === 'Chats') {
+        if (activeTab === 'Chats') {
             return (
-                <SearchChats openSearch={openSearch} closeSearch={closeSearch} style={styles.search} />
+                <View style={styles.search}>
+                    <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} backgroundColor={isDarkMode ? '#212C32' : 'white'} />
+                    <SearchChats openSearch={openSearch} closeSearch={closeSearch} />
+                </View>
             )
-        } else if(activeTab === 'Status') {
+        } else if (activeTab === 'Status') {
             return (
-                <SearchBox style={styles.search} closeSearch={closeSearch}/>
+                <View style={styles.search}>
+                    <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} backgroundColor={isDarkMode ? '#212C32' : 'white'} />
+                    <SearchBox closeSearch={closeSearch} />
+                </View>
             )
-        } else if(activeTab === 'Calls') {
+        } else if (activeTab === 'Calls') {
             return (
-                <SearchBox style={styles.search} closeSearch={closeSearch}/>
+                <View style={styles.search}>
+                    <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} backgroundColor={isDarkMode ? '#212C32' : 'white'} />
+                    <SearchBox closeSearch={closeSearch} />
+                </View>
             )
         }
     }
@@ -62,13 +72,13 @@ export const StackNavigation = ({ toggleCamera }) => {
     const menuItems = () => {
         if (activeTab === 'Community') {
             return (
-                <View>
-                    <Menu.Item style={styles.menuItem} title='Settings' />
+                <View >
+                    <Menu.Item title='Settings' />
                 </View>
             )
         } else if (activeTab === 'Chats') {
             return (
-                <View>
+                <View >
                     <Menu.Item onPress={() => alert('pressed')} title='New group' />
                     <Menu.Item title='New broadcast' />
                     <Menu.Item title='Linked devices' />
@@ -79,14 +89,14 @@ export const StackNavigation = ({ toggleCamera }) => {
             )
         } else if (activeTab === 'Status') {
             return (
-                <View>
+                <View >
                     <Menu.Item title='Status privacy' />
                     <Menu.Item title='Settings' />
                 </View>
             )
         } else if (activeTab === 'Calls') {
             return (
-                <View>
+                <View >
                     <Menu.Item title='Clear call log' />
                     <Menu.Item title='Settings' />
                 </View>
@@ -97,7 +107,7 @@ export const StackNavigation = ({ toggleCamera }) => {
     return (
         <View style={styles.container}>
             <Stack.Navigator style={styles.stackNavigator} screenOptions={{
-                headerShown: (activeTab === 'Status' && showSearch ) ? false : (activeTab === 'Calls' && showSearch ) ? false : true,
+                headerShown: (activeTab === 'Status' && showSearch) ? false : (activeTab === 'Calls' && showSearch) ? false : true,
                 headerMode: 'screen',
                 headerTintColor: isDarkMode ? 'grey' : 'white',
                 headerStyle: {
@@ -120,7 +130,7 @@ export const StackNavigation = ({ toggleCamera }) => {
                                 size={25}
                                 name="camera-outline"
                                 color={isDarkMode ? 'grey' : 'white'}
-                                onPress={() => toggleCamera()}
+                                onPress={() => navigation.navigate('CameraScreen')}
                             />
 
                             {activeTab !== "Community" && <Icon
@@ -142,7 +152,8 @@ export const StackNavigation = ({ toggleCamera }) => {
                 })}
                 />
                 <Stack.Screen name="Contacts" component={ContactsScreen} options={{ headerShown: false }} />
-                <Stack.Screen name='ChatsDetail' component={ChatsDetails} options={{ header: ({ navigation }) => <CustomChatsDetailsHeader navigation={navigation} /> }} />
+                <Stack.Screen name='ChatsDetail' component={ChatsDetails} initialParams={{ 'camera': toggleCamera }} options={{ header: ({ navigation }) => <CustomChatsDetailsHeader navigation={navigation} /> }} />
+                <Stack.Screen name='CameraScreen' component={CameraScreen} options={{ headerShown: false }} />
             </Stack.Navigator>
             {showSearch && searchContent()}
             <View style={styles.menuContainer}>
@@ -171,11 +182,14 @@ const styles = StyleSheet.create({
         paddingLeft: 20
     },
     menuContainer: {
-        position: 'absolute'
+        position: 'absolute',
     },
     search: {
         position: 'absolute',
         width: width,
         elevation: 20
+    },
+    menuItem: {
+        borderRadius: 5
     }
 });

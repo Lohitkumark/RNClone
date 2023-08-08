@@ -22,13 +22,9 @@ export const Routing = () => {
                 barStyle={isDarkMode || camera ? 'light-content' : 'dark-content'}
                 backgroundColor={backgroundStyle.backgroundColor}
             />
-            {camera ? 
-                <CameraScreen toggleCamera={toggleCamera} /> 
-            :
                 <NavigationContainer>
                     <StackNavigation toggleCamera={toggleCamera} />
                 </NavigationContainer>
-            }
         </View>
     );
 }

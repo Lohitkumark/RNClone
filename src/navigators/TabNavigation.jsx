@@ -132,15 +132,15 @@ export const TabNavigation = ({ setActiveTab, activeTab, showSearch, closeSearch
             {activeTab !== 'Community' && <View style={{ position: 'absolute', alignSelf: 'flex-end', bottom: 5 }} >
                 {activeTab === 'Chats' ?
                     <Pressable style={styles.messageIconWrapper} onPress={() => navigation.navigate('Contacts')}>
-                        <MaterialCommunityIcon name='android-messages' size={23} style={styles.messageIcon} />
+                        <MaterialCommunityIcon name='android-messages' size={23} style={styles.messageIcon} color={isDarkMode ? 'black' : 'white'} />
                     </Pressable>
                     : activeTab === 'Status' ?
                         <View style={styles.messageIconWrapper}>
-                            <MaterialCommunityIcon name='camera' size={23} style={styles.statusIcon} />
+                            <MaterialCommunityIcon name='camera' size={23} style={styles.statusIcon} color={isDarkMode ? 'black' : 'white'} onPress={()=>navigation.navigate('CameraScreen')}/>
                         </View>
                         : activeTab === 'Calls' ?
                             <View style={styles.messageIconWrapper}>
-                                <MaterialCommunityIcon name='phone-plus' color='white' size={23} style={styles.callsIcon} />
+                                <MaterialCommunityIcon name='phone-plus' size={23} color={isDarkMode ? 'black' : 'white'} style={styles.callsIcon} onPress={()=>navigation.navigate('Contacts')}/>
                             </View> : null}
                 <Animated.View style={[styles.editIconWrapper, { translateY: slideIconAnim.current }, { backgroundColor: isDarkMode ? '#212C32' : '#D8D8D9' }]}>
                     <MaterialIcon name='edit' color={isDarkMode ? 'white' : 'grey'} size={20} style={styles.editIcon} />
@@ -163,7 +163,7 @@ const styles = StyleSheet.create({
         bottom: 20,
         width: 50,
         height: 50,
-        borderRadius: 50,
+        borderRadius: 15,
         alignSelf: 'flex-end',
         backgroundColor: '#018068',
         right: 20,
@@ -174,14 +174,13 @@ const styles = StyleSheet.create({
         bottom: 85,
         width: 40,
         height: 40,
-        borderRadius: 50,
+        borderRadius: 12,
         alignSelf: 'flex-end',
         right: 25,
         zIndex: 1
     },
     messageIcon: {
         position: 'absolute',
-        color: 'white',
         alignSelf: 'center',
         top: 13,
         transform: [{ rotateY: '180deg' }]
@@ -189,14 +188,12 @@ const styles = StyleSheet.create({
     },
     statusIcon: {
         position: 'absolute',
-        color: 'white',
         alignSelf: 'center',
         top: 13,
 
     },
     callsIcon: {
         position: 'absolute',
-        color: 'white',
         alignSelf: 'center',
         top: 13,
 

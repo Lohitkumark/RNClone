@@ -1,19 +1,47 @@
 import React, { useEffect, useRef, useState } from "react";
-import { StyleSheet, Text, View, TextInput, Image, Dimensions, Animated, Easing, Pressable, VirtualizedList, useColorScheme } from "react-native";
+import { StyleSheet, Text, View, TextInput, Keyboard, Image, Dimensions, Animated, Easing, Pressable, VirtualizedList, useColorScheme, KeyboardAvoidingView, Modal } from "react-native";
 import Icon from 'react-native-vector-icons/Ionicons'
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
+import IonIcons from 'react-native-vector-icons/Ionicons'
+import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 import { Chatbox } from "../uiComponents/ChatBox";
 import { useDispatch, useSelector } from 'react-redux'
 import { setChatMessages } from "../../redux/slices/chatSlice";
+import { IconContainer } from "../uiComponents/IconContainer";
 
 
-export const ChatsDetails = ({ navigation, route }) => {
+export const ChatsDetails = (props) => {
+    const { navigation, route } = props
     const [messageInput, setMessageInput] = useState('')
     const [messageList, setMessageList] = useState([])
     const isDarkMode = useColorScheme() === 'dark';
+    const [showMenu, setShowMenu] = useState(false)
+    const [isKeyboardVisible, setKeyboardVisible] = useState(false);
+
+    const width = Dimensions.get('window').width;
 
     const dispatch = useDispatch()
+
+    useEffect(() => {
+        const keyboardDidShowListener = Keyboard.addListener(
+            'keyboardDidShow',
+            () => {
+                setKeyboardVisible(true);
+            },
+        );
+        const keyboardDidHideListener = Keyboard.addListener(
+            'keyboardDidHide',
+            () => {
+                setKeyboardVisible(false);
+            },
+        );
+
+        return () => {
+            keyboardDidHideListener.remove();
+            keyboardDidShowListener.remove();
+        };
+    }, []);
 
     const { chatMessages } = useSelector((state) => state.chats)
     const handleMessageChange = (input) => {
@@ -41,6 +69,10 @@ export const ChatsDetails = ({ navigation, route }) => {
         setMessageInput('')
     }
 
+    const handleOpenCamera = () => {
+        navigation?.navigate('CameraScreen')
+    }
+
     const slideIconAnim = useRef(new Animated.Value(0));
 
     useEffect(() => {
@@ -55,10 +87,89 @@ export const ChatsDetails = ({ navigation, route }) => {
     const getItemCount = () => messageList.length;
 
     const getItem = (messageList, index) => messageList[index];
+
+    const linkItemsMenu = () => {
+        return (
+            <View style={{ height: 170, width: width - 10, backgroundColor: 'white', borderRadius: 10, position: 'absolute', bottom: 50 }}>
+                <View style={{ alignSelf: 'center', top: 10 }}>
+                    <View style={styles.iconContainer}>
+                        <View>
+                            <IconContainer style={[styles.icons, { backgroundColor: '#5E64CC' }]} >
+                                <IonIcons name='document' color='white' size={20} style={{ alignSelf: 'center', top: 12 }} />
+                            </IconContainer>
+                            <Text style={{ position: 'absolute', alignSelf: 'center', bottom: -12, fontSize: 12 }}>Document</Text>
+                        </View>
+                        <View>
+                            <IconContainer style={[styles.icons, { backgroundColor: '#EC3E7C' }]} >
+                                <IonIcons name='camera' color='white' size={20} style={{ alignSelf: 'center', top: 12 }} />
+                            </IconContainer>
+                            <Text style={{ position: 'absolute', alignSelf: 'center', bottom: -12, fontSize: 12  }}>Camera</Text>
+                        </View>
+                        <View>
+                            <IconContainer style={[styles.icons, { backgroundColor: '#BF56D1' }]} >
+                                <MaterialIcon name='photo-size-select-actual' size={20} color='white' style={{ alignSelf: 'center', top: 12 }} />
+                            </IconContainer>
+                            <Text style={{ position: 'absolute', alignSelf: 'center', bottom: -12, fontSize: 12  }}>Gallery</Text>
+                        </View>
+                        <View>
+                            <IconContainer style={[styles.icons, { backgroundColor: '#F1910A' }]} >
+                                <MaterialIcon name='headset' size={20} color='white' style={{ alignSelf: 'center', top: 12 }} />
+                            </IconContainer>
+                            <Text style={{ position: 'absolute', alignSelf: 'center', bottom: -12, fontSize: 12  }}>Audio</Text>
+                        </View>
+
+                    </View>
+                    <View style={styles.iconContainer}>
+                        <View>
+                            <IconContainer style={[styles.icons, { backgroundColor: '#029B53' }]} >
+                                <MaterialIcon name='location-pin' size={20} color='white' style={{ alignSelf: 'center', top: 12 }} />
+                            </IconContainer>
+                            <Text style={{ position: 'absolute', alignSelf: 'center', bottom: -12, fontSize: 12  }}>Location</Text>
+                        </View>
+                        <View>
+                            <IconContainer style={[styles.icons, { backgroundColor: '#05A596' }]} >
+                                <View style={{
+                                    position: 'absolute',
+                                    width: 20,
+                                    height: 20,
+                                    backgroundColor: 'white',
+                                    borderRadius: 50,
+                                    marginRight: 15,
+                                    top: 12,
+                                    alignSelf: 'center'
+                                }}>
+                                    <FontAwesome name='rupee' size={12} color='#05A596' style={{ alignSelf: 'center', top: 5 }} />
+                                </View>
+                            </IconContainer>
+                            <Text style={{ position: 'absolute', alignSelf: 'center', bottom: -12, fontSize: 12  }}>Payments</Text>
+                        </View>
+                        <View>
+                            <IconContainer style={[styles.icons, { backgroundColor: '#0AABFC' }]} >
+                                <MaterialIcon name='person' size={20} color='white' style={{ alignSelf: 'center', top: 12 }} />
+                            </IconContainer>
+                            <Text style={{ position: 'absolute', alignSelf: 'center', bottom: -12, fontSize: 12  }}>Contacts</Text>
+                        </View>
+                        <View>
+                            <IconContainer style={[styles.icons, { backgroundColor: '#05A596' }]} >
+                                <MaterialCommunityIcon name='poll' size={20} color='white' style={{ alignSelf: 'center', top: 12 }} />
+                            </IconContainer>
+                            <Text style={{ position: 'absolute', alignSelf: 'center', bottom: -12, fontSize: 12  }}>Poll</Text>
+                        </View>
+                    </View>
+
+                </View>
+
+            </View>
+        )
+    }
+
+    const toggleMenu = () => {
+        setShowMenu(!showMenu)
+    }
     return (
         <View style={styles.container}>
             {!isDarkMode ? <Image style={styles.wallpaper} source={require('../assets/images/defaultWallpaper.png')} />
-            : <Image style={styles.wallpaper} source={require('../assets/images/defaultDarkWallpaper.jpg')} />}
+                : <Image style={styles.wallpaper} source={require('../assets/images/defaultDarkWallpaper.jpg')} />}
             <View style={styles.chatsWrapper}>
                 <View style={styles.chatsContainer}>
                     <VirtualizedList
@@ -69,22 +180,23 @@ export const ChatsDetails = ({ navigation, route }) => {
                         keyExtractor={(item) => item.id}
                         renderItem={({ item }) =>
                             <Pressable>
-                                <Chatbox style={[styles.Chatbox, {backgroundColor: isDarkMode ? '#018068' : '#D9FCD2'}]} message={item.message} time={item.time} messageType='right' />
+                                <Chatbox style={[styles.Chatbox, { backgroundColor: isDarkMode ? '#018068' : '#D9FCD2' }]} message={item.message} time={item.time} messageType='right' />
                             </Pressable>
                         }
                     />
                 </View>
             </View>
-            <View style={[styles.inputContainer, {backgroundColor: isDarkMode ? '#212C32' : 'white'}]}>
+            <View style={[styles.inputContainer, { backgroundColor: isDarkMode ? '#212C32' : 'white' }]}>
                 <Icon style={styles.emoji} name='happy-outline' size={22} />
                 <TextInput style={styles.input} value={messageInput} onChangeText={(message) => handleMessageChange(message)} placeholder='Message' placeholderTextColor='grey' cursorColor='#018068'></TextInput>
                 <Animated.View style={[styles.iconsContainer, { translateX: slideIconAnim.current }]}>
-                    {messageInput === "" && <MaterialIcon name='photo-camera' size={25} color='grey' />}
+                    {messageInput === "" && <Pressable android_ripple='black'><MaterialIcon name='photo-camera' size={25} color='grey' onPress={handleOpenCamera} /></Pressable>}
                     {messageInput === "" && <View style={styles.currencyContainer}>
                         <FontAwesome name='rupee' size={12} color='white' style={{ alignSelf: 'center', top: 5 }} />
                     </View>}
-                    <MaterialIcon style={styles.attachfile} name='attach-file' color='grey' size={25} rotate={90} />
+                    <MaterialIcon style={styles.attachfile} name='attach-file' color='grey' size={25} rotate={90} onPress={() => toggleMenu()} />
                 </Animated.View>
+                {showMenu && linkItemsMenu()}
             </View>
             <Pressable style={styles.audio} onPress={() => handleSend()}>
                 <MaterialIcon style={styles.audioIcon} name={messageInput === "" ? "mic" : "send"} color='white' size={25} />
@@ -108,7 +220,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         bottom: 10,
         left: 5,
-        paddingLeft:30
+        paddingLeft: 30
     },
     chatsWrapper: {
         marginTop: 7,
@@ -173,4 +285,13 @@ const styles = StyleSheet.create({
         // top: 30,
         marginBottom: 20,
     },
+    iconContainer: {
+        flexDirection: 'row',
+        alignSelf: 'flex-start',
+        marginBottom: 10
+    },
+    icons: {
+        margin: 10,
+        marginBottom: 5
+    }
 });
